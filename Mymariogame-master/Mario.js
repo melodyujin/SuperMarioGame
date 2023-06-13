@@ -9,6 +9,7 @@ class Mario extends GameObject{
         this.rightSensor=new RightSensor(this.container, 3,50, this.x+this.width,this.y+30, "red");
         this.topSensor=new TopSensor(this.container, 50,3, this.x+20,this.y-4, "red");
         this.bottomSensor=new BottomSensor(this.container, 70,3, this.x+10,this.y+this.height, "red");
+
     }
 
     hitCheck(){
@@ -22,12 +23,33 @@ class Mario extends GameObject{
         }
     }
 
+    //마리오가 쳐다볼 방향 
+    eyeSight(){
+        if(isRight){
+            this.img.style.transform="scaleX(1)";
+        }else{
+            this.img.style.transform="scaleX(-1)";
+        }
+    }
+
     tick(){
         //this.velY+=g;
         //console.log(this.velY);
 
         this.x+=this.velX;
         this.y+=this.velY;
+
+        //마리오의 위치를 화면밖으로 못 나가게 한다 
+        if(this.x>=920){
+            this.x=920;
+        }
+        if(this.x<0){
+            this.x=0;
+        }
+
+        //마리오 시선 처리 
+        this.eyeSight();
+
 
         //마리오가 보유한 센서막대들에 대해서도 tick()
         /*
