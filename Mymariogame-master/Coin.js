@@ -1,0 +1,2 @@
+class Coin extends GameObject{
+}

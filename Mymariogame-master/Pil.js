@@ -1,0 +1,2 @@
+class Pil extends GameObject{
+}

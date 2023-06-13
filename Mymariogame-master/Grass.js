@@ -1,0 +1,2 @@
+class Grass extends GameObject{
+}
