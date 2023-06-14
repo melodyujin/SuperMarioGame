@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수퍼Mariogame</title>
+    <style>
+        #wrapper{
+            width: 1000px;
+            height: 700px;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            background: lightskyblue;
+        }
+        #header{
+            width: 100%;
+            height: 50px;
+            background: lightskyblue;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="../js/lib.js"></script>
+    <script src="./GameObject.js"></script>
+    <script src="./Map1.js"></script>
+    <script src="./Brick.js"></script>
+    <script src="./Mario.js"></script>
+    <script src="./Grass.js"></script>
+    <script src="./Question.js"></script>
+    <script src="./Cloud.js"></script>
+    <script src="Mushroom.js"></script>
+    <script src="Pil.js"></script>
+    <script src="./Coin.js"></script>
+    <script src="./Castle.js"></script>
+    <script src="./Sensor.js"></script>
+    <script src="./LeftSensor.js"></script>
+    <script src="./RightSensor.js"></script>
+    <script src="./TopSensor.js"></script>
+    <script src="./BottomSensor.js"></script>
+    <script>
+        let wrapper;
+        let header;
+        let stage;
+        let mario;
+        let g=0.2;
+        let flag=true;
+        let score=0;
+        let brickArray=[];
+        let grassArray=[];
+        let questionArray=[];
+        let cloudArray=[];
+        let mushroomArray=[];
+        let pilArray=[];
+        let coinArray=[];
+        let castleArray=[];
+
+        let bgX=-1; //맵에 등장하는 모든 사물이 어느 방향으로 움직일지를 결정하는 변수 
+        // -1  전체적인 객체들은 좌측으로 , +1 우측으로 
+        let isRight=true;
+
+        function createBrick(){
+            //container, width, height, x, y, velX,velY
+            for(let a=0;a<map1.length;a++){
+                for(let i=0;i<map1[a].length;i++){
+                    if(map1[a][i]==1){ //벽돌
+                        let brick=new Brick(stage,"./images/brick.png",50,50,i*50,a*50,bgX,0);
+                        brickArray.push(brick);
+                    }else if(map1[a][i]==2){ //마리오
+                        mario=new Mario(stage, "./images/mario.png",75,75,100+ i*50, a*50 -400 ,0,0);
+                        mario.img.style.zIndex=1;
+                    }else if(map1[a][i]==3){ //풀
+                        let grass=new Grass(stage, "./images/grass.png", 60,60,i*50,a*50,bgX,0);
+                        grassArray.push(grass);
+                    }else if(map1[a][i]==4){ //박스
+                        let question=new Question(stage, "./images/Q.png",50,50,i*50,a*50,bgX,0);
+                        questionArray.push(question);
+                    }else if(map1[a][i]==5){ //구름
+                        let cloud=new Cloud(stage,"./images/cloud.png",100,100,i*50,a*50,bgX,0);
+                        cloudArray.push(cloud);
+                    }else if(map1[a][i]==6){ //머쉬룸
+                        let mushroom=new Mushroom(stage, "./images/m1.png",50,50,i*50,a*50,bgX,0);
+                        mushroomArray.push(mushroom);
+                    }else if(map1[a][i]==7){ //기둥
+                        let pil=new Pil(stage,"./images/Pil.png",110,160,i*50,a*50,bgX,0);
+                        pilArray.push(pil);
+                    }else if(map1[a][i]==8){ //코인
+                        let coin=new Coin(stage, "./images/coin.png", 30,40,i*50,a*50,bgX,0);
+                        coinArray.push(coin);
+                    }else if(map1[a][i]==9){ //성
+                        let castle=new Castle (stage, "./images/castle.png", 300,420,i*50,a*50,bgX,0);
+                        castleArray.push(castle);
+                    }
+                }
+            }
+        }
+        
+        function jump(){
+
+            if(mario.falled==true){ //땅바닥에 발이 닿았다면...
+                mario.velY=-10;
+
+                mario.falled=false;
+            }
+        }
+
+        function moveX(n){
+            if(n!=0){
+                isRight=(n<0)?  false : true;
+            }else{
+                bgX=0;
+            }
+            mario.velX=n;
+        }
+
+
+        //stage 를 움직이지 말고, 모든 물체를 움직이기 
+        function bgEffect(){
+
+            for(let i=0;i<brickArray.length;i++){
+                brickArray[i].tick();
+                brickArray[i].render();
+                brickArray[i].velX=bgX;
+            }
+            for(let i=0;i<grassArray.length;i++){
+                grassArray[i].tick();
+                grassArray[i].render();
+                grassArray[i].velX=bgX;
+            }
+            for(let i=0;i<questionArray.length;i++){
+                questionArray[i].tick();
+                questionArray[i].render();
+                questionArray[i].velX=bgX;
+            }
+            for(let i=0;i<cloudArray.length;i++){
+                cloudArray[i].tick();
+                cloudArray[i].render();
+                cloudArray[i].velX=bgX;
+            }
+            for(let i=0;i<mushroomArray.length;i++){
+                mushroomArray[i].tick();
+                mushroomArray[i].render();
+                mushroomArray[i].velX=bgX;
+            }
+            for(let i=0;i<pilArray.length;i++){
+                pilArray[i].tick();
+                pilArray[i].render();
+                pilArray[i].velX=bgX;
+            }
+            for(let i=0;i<coinArray.length;i++){
+                coinArray[i].tick();
+                coinArray[i].render();
+                coinArray[i].velX=bgX;
+            }
+            for(let i=0;i<castleArray.length;i++){
+                castleArray[i].tick();
+                castleArray[i].render();
+                castleArray[i].velX=bgX;
+            }
+            
+            
+            if(mario.velX!=0 && mario.x<500 && isRight==false){
+                bgX=1;
+            }
+
+            if(mario.velX!=0 && mario.x>500 && isRight==true){
+                bgX=-1;
+            }
+
+        }
+        function bgInit(){
+            stage.style.width=100+"%";
+            stage.style.height=650+"px";
+            stage.style.background="lightsky";
+            stage.style.position="absolute";
+        }
+
+        
+        //상단의 정보출력 패널 처리(점수,스테이지or마리오목숨x3,시간)
+        function setInfo(){ 
+            header.innerText="score "+score;
+         }
+
+        function setScore(){ //점수를 100증가시키는 함수
+            score+=100;
+            header.innerText=score;
+        }
+        
+        function loop(){
+            //console.log("loop()...")
+            if(flag){
+                mario.tick();
+                mario.render();
+            };
+            
+            bgEffect();
+        }
+        function init(){
+            wrapper=document.getElementById("wrapper");
+            header=document.getElementById("header");
+            stage=document.getElementById("stage");
+
+            bgInit();
+            setInfo();
+            createBrick();
+        }
+
+        $(function(){
+            init();
+            setInterval("loop()",10);
+
+            $(document.body).on("keydown", function(e){
+                switch(e.keyCode){
+                    case 32:jump();break; //점프
+                    case 37:moveX(-3);break; //좌
+                    case 39:moveX(3);break; //우
+                }
+            });
+            $(document.body).on("keyup", function(e){
+                switch(e.keyCode){
+                    case 37:moveX(0);break; //좌
+                    case 39:moveX(0);break; //우
+                }
+            });
+
+
+        });
+
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header"></div>
+        <div id="stage"></div>
+    </div>
+</body>
+</html>
