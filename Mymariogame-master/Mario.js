@@ -33,7 +33,7 @@ class Mario extends GameObject{
     }
 
     tick(){
-        //this.velY+=g;
+        this.velY+=g;
         //console.log(this.velY);
 
         this.x+=this.velX;

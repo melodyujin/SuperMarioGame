@@ -160,15 +160,21 @@
                 bgX=-1;
             }
 
-
         }
         function bgInit(){
             stage.style.width=100+"%";
-            stage.style.height=600+"px";
+            stage.style.height=650+"px";
             stage.style.background="lightsky";
             stage.style.position="absolute";
         }
-        function setInfo(){
+
+        //상단의 정보출력 패널 처리(점수,스테이지or마리오목숨x3,시간)
+        function setInfo(){ 
+            header.innerText="score:"+score;
+        }
+
+        function setScore(){ //점수를 100증가시키는 함수
+            score+=100;
             header.innerText=score;
         }
 
@@ -197,7 +203,6 @@
 
             $(document.body).on("keydown", function(e){
                 switch(e.keyCode){
-                    case 27:flag=!flag;break; //esc
                     case 32:jump();break; //점프
                     case 37:moveX(-2);break; //좌
                     case 39:moveX(2);break; //우
